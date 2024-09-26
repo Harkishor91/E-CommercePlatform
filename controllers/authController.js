@@ -144,7 +144,7 @@ const getAllUser = async (req, res) => {
   }
 };
 
-const getUserProfile = async (req, res) => {
+const getUserDetail = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -160,7 +160,7 @@ const getUserProfile = async (req, res) => {
   } catch (err) {
     return res
       .status(500)
-      .json({ status: 500, message: "GetUserProfile failed", err });
+      .json({ status: 500, message: "getUserDetail failed", err });
   }
 };
 
@@ -170,5 +170,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   getAllUser,
-  getUserProfile,
+  getUserDetail,
 };

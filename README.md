@@ -47,3 +47,5 @@ Additional Features (optional):
 Implement wishlists and product recommendations.
 Add real-time notifications for orders, reviews, and vendor activities.
 Build a reporting system for sales, revenue, and user activity.
+
+

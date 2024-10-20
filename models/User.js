@@ -31,6 +31,16 @@ const userSchema = new mongoose.Schema(
       type: String, // URL of the image
       // default: null, // Set default to null
     },
+    isVerify: {
+      type: Boolean,
+      default: false,
+    },
+    otp: {
+      type: String, // Store the generated OTP
+    },
+    otpExpiresAt: {
+      type: Date, // Store OTP expiration time
+    },
   },
   { timestamps: true, versionKey: false }
 );
@@ -60,11 +70,27 @@ userSchema.methods.createJWT = function () {
       email: this.email,
       role: this.role,
       profileImage: this.profileImage,
+      isVerify:this.isVerify
       // not show password in response
     },
     process.env.JWT_SECRET,
     { expiresIn: "30d" }
   );
 };
+
+
+// Method to verify OTP
+userSchema.methods.verifyOTP = function (enteredOtp) {
+  const currentTime = new Date();
+  // Check if OTP is correct and not expired
+  if (enteredOtp === this.otp && currentTime < this.otpExpiresAt) {
+    this.isVerify = true;
+    this.otp = null; // Clear OTP after successful verification
+    this.otpExpiresAt = null;
+    return true;
+  }
+  return false;
+};
+
 
 module.exports = mongoose.model("User", userSchema);

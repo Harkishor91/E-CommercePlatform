@@ -7,12 +7,10 @@ const auth = async (req, res, next) => {
   // Check if the Authorization header is present and starts with 'Bearer'
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    return res
-      .status(statusCode.UNAUTHORIZED)
-      .json({
-        status: statusCode.UNAUTHORIZED,
-        message: "Authentication invalid",
-      });
+    return res.status(statusCode.UNAUTHORIZED).json({
+      status: statusCode.UNAUTHORIZED,
+      message: "Authentication invalid",
+    });
   }
 
   // Extract the token using Authorization header
@@ -22,7 +20,7 @@ const auth = async (req, res, next) => {
     const userInfo = jwt.verify(token, process.env.JWT_SECRET);
 
     // Fetch the user from the database using the correct userId
-    const user = await User.findById(userInfo.userId).select("-password");
+    const user = await User.findById(userInfo.userId).select("-password -otp");
 
     if (!user) {
       return res
@@ -38,18 +36,17 @@ const auth = async (req, res, next) => {
       email: user.email,
       role: user.role,
       profileImage: user.profileImage,
+      isVerify: user.isVerify,
     };
 
     next();
   } catch (error) {
     console.error("Authentication error:", error);
-    return res
-      .status(statusCode.FORBIDDEN)
-      .json({
-        status: statusCode.FORBIDDEN,
-        message: "Authentication failed",
-        error,
-      });
+    return res.status(statusCode.FORBIDDEN).json({
+      status: statusCode.FORBIDDEN,
+      message: "Authentication failed",
+      error,
+    });
   }
 };
 

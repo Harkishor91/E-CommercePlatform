@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const statusCode = require("../utils/statusCode");
 
 // Middleware function for User Authentication
 const auth = async (req, res, next) => {
@@ -7,8 +8,11 @@ const auth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     return res
-      .status(401)
-      .json({ status: 401, message: "Authentication invalid" });
+      .status(statusCode.UNAUTHORIZED)
+      .json({
+        status: statusCode.UNAUTHORIZED,
+        message: "Authentication invalid",
+      });
   }
 
   // Extract the token using Authorization header
@@ -21,7 +25,9 @@ const auth = async (req, res, next) => {
     const user = await User.findById(userInfo.userId).select("-password");
 
     if (!user) {
-      return res.status(404).json({ status: 404, message: "User not found" });
+      return res
+        .status(statusCode.NOT_FOUND)
+        .json({ status: statusCode.NOT_FOUND, message: "User not found" });
     }
 
     // Set the authenticated user information in the request object
@@ -38,8 +44,12 @@ const auth = async (req, res, next) => {
   } catch (error) {
     console.error("Authentication error:", error);
     return res
-      .status(403)
-      .json({ status: 403, message: "Authentication failed", error });
+      .status(statusCode.FORBIDDEN)
+      .json({
+        status: statusCode.FORBIDDEN,
+        message: "Authentication failed",
+        error,
+      });
   }
 };
 

@@ -15,12 +15,12 @@ const upload = require("../middlewares/upload");
 router.post("/addStore", authMiddleware,upload.single('storeImage') ,addStore);
 
 // route for get all stores
-router.get("/getAllStore", getAllStore);
+router.get("/getAllStore", authMiddleware,getAllStore);
 
 // route for update route
-router.put("/updateStore/:id", updateStore);
+router.put("/updateStore/:storeId", authMiddleware,updateStore);
 
 // route for delete store
-router.delete("/deleteStore/:id", deleteStore);
+router.delete("/deleteStore/:storeId", authMiddleware,deleteStore);
 
 module.exports = router;

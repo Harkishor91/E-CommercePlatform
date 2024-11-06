@@ -2,25 +2,29 @@ const express = require("express");
 const router = express.Router();
 const {
   addStore,
+  getVendorOwnStore,
   getAllStore,
   updateStore,
   deleteStore,
 } = require("../controllers/storeController");
 
-// use middlewares 
+// use middlewares
 const authMiddleware = require("../middlewares/authentication");
 const upload = require("../middlewares/upload");
 
 // route for add store
-router.post("/addStore", authMiddleware,upload.single('storeImage') ,addStore);
+router.post("/addStore", authMiddleware, upload.single("storeImage"), addStore);
+
+// route for vendor own stores
+router.get("/getVendorOwnStore", authMiddleware, getVendorOwnStore);
 
 // route for get all stores
-router.get("/getAllStore", authMiddleware,getAllStore);
+router.get("/getAllStore", authMiddleware, getAllStore);
 
 // route for update route
-router.put("/updateStore/:storeId", authMiddleware,updateStore);
+router.put("/updateStore/:storeId", authMiddleware, updateStore);
 
 // route for delete store
-router.delete("/deleteStore/:storeId", authMiddleware,deleteStore);
+router.delete("/deleteStore/:storeId", authMiddleware, deleteStore);
 
 module.exports = router;
